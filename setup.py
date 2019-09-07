@@ -16,17 +16,21 @@ https://laalaguer.github.io/oceanex_py3/
 
 """
 from setuptools import setup
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.rst')) as f:
+    long_description = f.read()
 
 
 setup(
     name='oceanex_py3',
-    version='1.0.1',
+    version='1.0.2',
     url='https://github.com/laalaguer/oceanex_py3',
     license='MIT',
     author='laalaguer',
     author_email='laalaguer@gmail.com',
     description='Query, trade and manage funds on Oceanex.',
-    long_description=__doc__,
+    long_description=long_description,
     packages=['oceanex_py3'],
     zip_safe=False,
     include_package_data=True,
