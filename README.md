@@ -7,7 +7,7 @@ oceanex_py3 is a Python SDK to query, trade and manage funds on Oceanex.
 
 ## Documentation
 
-TODO
+https://laalaguer.github.io/oceanex_py3/
 
 ## Source Code
 
