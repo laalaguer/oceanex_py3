@@ -3,5 +3,8 @@ __pycache__/
 .vscode/
 .DS_Store
 
+oceanex_py3.egg-info/
+dist/
+
 key.pem
 configuration.py

@@ -4,13 +4,23 @@ oceanex_py3
 
 oceanex_py3 is a Python SDK to query, trade and manage funds on Oceanex.
 
+Installation: pip3 install oceanex_py3
+
+Source: 
+
+https://github.com/laalaguer/oceanex_py3
+
+Documentation
+
+https://laalaguer.github.io/oceanex_py3/
+
 """
 from setuptools import setup
 
 
 setup(
     name='oceanex_py3',
-    version='1.0.0',
+    version='1.0.1',
     url='https://github.com/laalaguer/oceanex_py3',
     license='MIT',
     author='laalaguer',

@@ -5,4 +5,4 @@ test:
 	pytest -s
 
 clean:
-	rm -rf ./html
+	rm -rf ./docs
