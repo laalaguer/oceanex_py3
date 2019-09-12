@@ -152,7 +152,7 @@ class Trade:
         else:
             self.side = 'unknown'
 
-def get_trades(market, limit):
+def get_trades(market, limit=0, from_id=0, to_id=0):
     '''
     Gets the trades that completed in the market.
 
@@ -165,6 +165,12 @@ def get_trades(market, limit):
     limit: int
         Limit the results.
 
+    from_id: int
+        Limit the results to be after trade id.
+    
+    to_id: int
+        Limit the results to be before the trade id.
+
     Returns
     -------
     trades
@@ -174,9 +180,17 @@ def get_trades(market, limit):
     url = URL + '/trades'
 
     data = {
-        "market": market,
-        "limit": limit,
+        "market": market
     }
+
+    if limit:
+        data['limit'] = limit
+
+    if from_id:
+        data['from'] = from_id
+    
+    if to_id:
+        data['to'] = to_id
 
     r = requests.post(url, data=data)
     result = r.json()

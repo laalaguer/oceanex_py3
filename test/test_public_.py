@@ -1,5 +1,5 @@
 ''' Tests for public methods. '''
-
+import time
 from oceanex_py3 import public
 
 def test_markets():
@@ -23,3 +23,22 @@ def test_non_exist_orderbook():
 def test_trade():
     trades = public.get_trades('btcusdt', 20)
     assert len(trades) == 20
+
+    # Get the nearest 500 lines of JUR trades.
+    all_trades = []
+    trades = public.get_trades('jurvet', 500)
+    assert len(trades) == 500
+    for trade in trades:
+        all_trades.append(trade)
+
+    next_id = trades[-1].identifier
+    while True:
+        trades = public.get_trades('jurvet', 500, to_id=next_id)
+        for trade in trades:
+            all_trades.append(trade)
+        if len(trades) == 500:
+            next_id = trades[-1].identifier
+            time.sleep(1)
+            continue
+        else:
+            break

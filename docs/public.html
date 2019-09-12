@@ -178,7 +178,7 @@ class Trade:
         else:
             self.side = &#39;unknown&#39;
 
-def get_trades(market, limit):
+def get_trades(market, limit=0, from_id=0, to_id=0):
     &#39;&#39;&#39;
     Gets the trades that completed in the market.
 
@@ -191,6 +191,12 @@ def get_trades(market, limit):
     limit: int
         Limit the results.
 
+    from_id: int
+        Limit the results to be after trade id.
+    
+    to_id: int
+        Limit the results to be before the trade id.
+
     Returns
     -------
     trades
@@ -200,9 +206,17 @@ def get_trades(market, limit):
     url = URL + &#39;/trades&#39;
 
     data = {
-        &#34;market&#34;: market,
-        &#34;limit&#34;: limit,
+        &#34;market&#34;: market
     }
+
+    if limit:
+        data[&#39;limit&#39;] = limit
+
+    if from_id:
+        data[&#39;from&#39;] = from_id
+    
+    if to_id:
+        data[&#39;to&#39;] = to_id
 
     r = requests.post(url, data=data)
     result = r.json()
@@ -327,7 +341,7 @@ Parameters</p>
 </details>
 </dd>
 <dt id="oceanex_py3.public.get_trades"><code class="name flex">
-<span>def <span class="ident">get_trades</span></span>(<span>market, limit)</span>
+<span>def <span class="ident">get_trades</span></span>(<span>market, limit=0, from_id=0, to_id=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Gets the trades that completed in the market.</p>
@@ -337,6 +351,10 @@ Parameters</p>
 <dd>The identifier used to call the api, eg. 'btcusdt'</dd>
 <dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
 <dd>Limit the results.</dd>
+<dt><strong><code>from_id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Limit the results to be after trade id.</dd>
+<dt><strong><code>to_id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Limit the results to be before the trade id.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -345,7 +363,7 @@ Parameters</p>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">def get_trades(market, limit):
+<pre><code class="python">def get_trades(market, limit=0, from_id=0, to_id=0):
     &#39;&#39;&#39;
     Gets the trades that completed in the market.
 
@@ -358,6 +376,12 @@ Parameters</p>
     limit: int
         Limit the results.
 
+    from_id: int
+        Limit the results to be after trade id.
+    
+    to_id: int
+        Limit the results to be before the trade id.
+
     Returns
     -------
     trades
@@ -367,9 +391,17 @@ Parameters</p>
     url = URL + &#39;/trades&#39;
 
     data = {
-        &#34;market&#34;: market,
-        &#34;limit&#34;: limit,
+        &#34;market&#34;: market
     }
+
+    if limit:
+        data[&#39;limit&#39;] = limit
+
+    if from_id:
+        data[&#39;from&#39;] = from_id
+    
+    if to_id:
+        data[&#39;to&#39;] = to_id
 
     r = requests.post(url, data=data)
     result = r.json()

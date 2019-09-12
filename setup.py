@@ -24,7 +24,7 @@ with open(path.join(this_directory, 'README.rst')) as f:
 
 setup(
     name='oceanex_py3',
-    version='1.0.2',
+    version='1.1.0',
     url='https://github.com/laalaguer/oceanex_py3',
     license='MIT',
     author='laalaguer',
