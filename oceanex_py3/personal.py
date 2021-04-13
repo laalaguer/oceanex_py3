@@ -7,6 +7,7 @@ import jwt
 import requests
 
 URL = 'https://api.oceanex.pro/v1'
+TIMEOUT = 15  # 15 seconds
 
 class Personal:
     def __init__(self, uid, apikey_id, private_key_location):
@@ -43,7 +44,7 @@ class Personal:
         url = URL + '/members/me'
         data = {}
         data = self._build_data(data)
-        r = requests.post(url, data=data)
+        r = requests.post(url, data=data, timeout=TIMEOUT)
         result = r.json()
 
         if result['code'] != 0:
@@ -73,7 +74,7 @@ class Personal:
 
         data = self._build_data(data)
 
-        r = requests.post(url, data=data)
+        r = requests.post(url, data=data, timeout=TIMEOUT)
         result = r.json()
 
         if result['code'] != 0:
@@ -171,7 +172,7 @@ class Personal:
 
         data = self._build_data(data)
 
-        r = requests.get(url, data=data)
+        r = requests.get(url, data=data, timeout=TIMEOUT)
 
         result = r.json()
         if result['code'] != 0:
@@ -212,7 +213,7 @@ class Personal:
             'ids': order_id_list
         }
         data = self._build_data(data)
-        r = requests.post(url, data = data)
+        r = requests.post(url, data=data, timeout=TIMEOUT)
         result = r.json()
         if result['code'] != 0:
             return False
@@ -232,7 +233,7 @@ class Personal:
         url = URL + '/orders/clear'
         data = {}
         data = self._build_data(data)
-        r = requests.post(url, data=data)
+        r = requests.post(url, data=data, timeout=TIMEOUT)
         result = r.json()
 
         if result['code'] != 0:

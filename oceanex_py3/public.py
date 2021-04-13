@@ -5,6 +5,7 @@ See https://api.oceanex.pro/doc/v1/
 '''
 
 URL = 'https://api.oceanex.pro/v1'
+TIMEOUT = 15  # 15 seconds
 
 import requests
 
@@ -42,7 +43,7 @@ def get_markets():
 
     url = URL + '/markets'
     
-    r = requests.post(url)
+    r = requests.post(url, timeout=TIMEOUT)
   
     result = r.json()
 
@@ -109,7 +110,7 @@ def get_orderbook(market, limit):
         "limit": limit
     }
 
-    r = requests.post(url, data)
+    r = requests.post(url, data, timeout=TIMEOUT)
     result = r.json()
 
     if result['code'] != 0:
@@ -192,7 +193,7 @@ def get_trades(market, limit=0, from_id=0, to_id=0):
     if to_id:
         data['to'] = to_id
 
-    r = requests.post(url, data=data)
+    r = requests.post(url, data=data, timeout=TIMEOUT)
     result = r.json()
 
     if result['code'] != 0:

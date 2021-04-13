@@ -1,3 +1,6 @@
 pytest
 requests
 pyjwt
+pdoc
+twine
+wheel
