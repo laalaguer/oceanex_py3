@@ -1,6 +1,6 @@
 pytest
 requests
 pyjwt
-pdoc
+pdoc3
 twine
 wheel
