@@ -17,9 +17,9 @@ https://github.com/laalaguer/oceanex_py3
 Documentation
 -------------
 
-https://laalaguer.github.io/oceanex_py3/
+See `/docs` for detailed APIs.
 
-Some examples
+Examples
 -------------
 
 Get all trading pairs supported on Oceanex.

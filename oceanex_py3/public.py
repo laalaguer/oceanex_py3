@@ -4,7 +4,7 @@ Public API methods of Oceanex.
 See https://api.oceanex.pro/doc/v1/
 '''
 
-URL = 'https://api.oceanex.pro/v1'
+URL = 'https://api.oceanex.cc/v1'
 TIMEOUT = 15  # 15 seconds
 
 import requests

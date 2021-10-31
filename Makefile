@@ -1,6 +1,6 @@
 install:
 	python3 -m venv .env
-	. .env/bin/activate && pip3 install -r requirements.txt
+	. .env/bin/activate && pip3 install --no-cache-dir -r requirements.txt
 
 docs: clean
 	rm -rf docs
