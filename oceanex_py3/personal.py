@@ -6,7 +6,7 @@ See https://api.oceanex.pro/doc/v1/
 import jwt
 import requests
 
-URL = 'https://api.oceanex.cc/v1'
+URL = 'https://api.oceanex.pro/v1'
 TIMEOUT = 15  # 15 seconds
 
 class Personal:
