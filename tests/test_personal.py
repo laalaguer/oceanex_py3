@@ -16,13 +16,13 @@ def test_accounts():
 def test_buy_status_cancel():
     ''' Test with the market '''
     # create a buy order, which is really low
-    _, bids, _ = public.get_orderbook('ticvet', 10)
+    _, bids, _ = public.get_orderbook('vthovet', 10)
     lowest_buy_price = bids[0].price
     for each in bids:
         if each.price < lowest_buy_price:
             lowest_buy_price = each.price
 
-    order1 = p.new_buy_limit_order('tic', 'vet', lowest_buy_price, 101/lowest_buy_price)
+    order1 = p.new_buy_limit_order('vtho', 'vet', lowest_buy_price, 101/lowest_buy_price)
     assert order1 != None
     assert order1.price == lowest_buy_price
 

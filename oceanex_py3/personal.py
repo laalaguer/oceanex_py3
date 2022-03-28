@@ -291,7 +291,8 @@ class Personal:
 
 
 class WithdrawOrder:
-    def __init__(self, result):
+    def __init__(self, response):
+        result = response['data']
         self.currency = result['currency']
         self.chain_name = result['chain_name']
         self.amount = float(result['amount'])
@@ -299,9 +300,9 @@ class WithdrawOrder:
         self.blockchain_txid = result['blockchain_txid']
         self.rid = result['rid']
         self.memo = result["memo"]
-        self.created_on = int(result['created_on']) # timestamp
-        self.updated_on = int(result['updated_on']) # timestamp
-        self.completed_on = int(result['completed_on']) # timestamp
+        self.created_on = result.get('completed_on', 0) # timestamp
+        self.updated_on = result.get('completed_on', 0) # timestamp
+        self.completed_on = result.get('completed_on', 0) # timestamp
 
 
 class Account:

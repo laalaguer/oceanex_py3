@@ -26,8 +26,8 @@ def test_trade():
 
     # Get the nearest 500 lines of JUR trades.
     all_trades = []
-    trades = public.get_trades('jurvet', 500)
-    assert len(trades) == 500
+    trades = public.get_trades('jurvet', 20)
+    assert len(trades) == 20
     for trade in trades:
         all_trades.append(trade)
 
