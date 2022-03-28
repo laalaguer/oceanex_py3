@@ -124,7 +124,6 @@ class Personal:
                 result[&#39;data&#39;][&#39;market&#39;]
             )
 
-
     def new_buy_limit_order(self, left, right, price, volume):
         &#39;&#39;&#39; Create a buy limit order.
 
@@ -222,7 +221,6 @@ class Personal:
                 x[&#39;market&#39;]
             ) for x in result[&#39;data&#39;]]
 
-
     def cancel_orders(self, order_id_list):
         &#39;&#39;&#39; Cancel multiple orders.
         
@@ -270,6 +268,72 @@ class Personal:
             return False
         else:
             return True
+
+    def withdraw(self, rid: str, currency: str, amount: float, chain_name: str = None, memo: str = None, tid: str = None):
+        &#39;&#39;&#39; Withdraw assets.
+
+        Parameters
+        ----------
+
+        rid: str
+            Destination address or beneficiary ID (case sensitive).
+        currency: str
+            Currency ID. eg. &#34;vet&#34;.
+        amount: float
+            Amount to withdraw (take care of rounding yourself)
+        chain_name: str
+            Chain name if applicable
+        memo: str
+            Short string to describe withdraw
+        tid: str
+            Shared transaction ID. Must &lt;= 64 chars. Leave blank, the exchange will generate one for you.
+
+        Returns
+        -------
+
+        order
+            A `WithdrawOrder` or None if operation failed.
+
+        &#39;&#39;&#39;
+        url = URL + &#39;/withdraws/special/new&#39;
+        data = {
+            &#39;rid&#39;: rid,
+            &#39;currency&#39;: currency.lower(),
+            &#39;amount&#39;: float(amount)
+        }
+        if chain_name:
+            data[&#39;chain_name&#39;] = chain_name
+        if memo:
+            data[&#39;memo&#39;] = memo
+        if tid:
+            data[&#39;tid&#39;] = tid
+
+        data = self._build_data(data)
+
+        r = requests.post(url, data=data, timeout=TIMEOUT)
+        result = r.json()
+
+        if result[&#39;code&#39;] != 0:
+            return None
+        else:
+            wo = WithdrawOrder(result)
+            return wo
+
+
+class WithdrawOrder:
+    def __init__(self, response):
+        result = response[&#39;data&#39;]
+        self.currency = result[&#39;currency&#39;]
+        self.chain_name = result[&#39;chain_name&#39;]
+        self.amount = float(result[&#39;amount&#39;])
+        self.fee = float(result[&#39;fee&#39;])
+        self.blockchain_txid = result[&#39;blockchain_txid&#39;]
+        self.rid = result[&#39;rid&#39;]
+        self.memo = result[&#34;memo&#34;]
+        self.created_on = result.get(&#39;completed_on&#39;, 0) # timestamp
+        self.updated_on = result.get(&#39;completed_on&#39;, 0) # timestamp
+        self.completed_on = result.get(&#39;completed_on&#39;, 0) # timestamp
+
 
 class Account:
     &#39;&#39;&#39; User wallets, balances.
@@ -494,7 +558,6 @@ class UserOrder:
                 result[&#39;data&#39;][&#39;market&#39;]
             )
 
-
     def new_buy_limit_order(self, left, right, price, volume):
         &#39;&#39;&#39; Create a buy limit order.
 
@@ -592,7 +655,6 @@ class UserOrder:
                 x[&#39;market&#39;]
             ) for x in result[&#39;data&#39;]]
 
-
     def cancel_orders(self, order_id_list):
         &#39;&#39;&#39; Cancel multiple orders.
         
@@ -639,7 +701,57 @@ class UserOrder:
         if result[&#39;code&#39;] != 0:
             return False
         else:
-            return True</code></pre>
+            return True
+
+    def withdraw(self, rid: str, currency: str, amount: float, chain_name: str = None, memo: str = None, tid: str = None):
+        &#39;&#39;&#39; Withdraw assets.
+
+        Parameters
+        ----------
+
+        rid: str
+            Destination address or beneficiary ID (case sensitive).
+        currency: str
+            Currency ID. eg. &#34;vet&#34;.
+        amount: float
+            Amount to withdraw (take care of rounding yourself)
+        chain_name: str
+            Chain name if applicable
+        memo: str
+            Short string to describe withdraw
+        tid: str
+            Shared transaction ID. Must &lt;= 64 chars. Leave blank, the exchange will generate one for you.
+
+        Returns
+        -------
+
+        order
+            A `WithdrawOrder` or None if operation failed.
+
+        &#39;&#39;&#39;
+        url = URL + &#39;/withdraws/special/new&#39;
+        data = {
+            &#39;rid&#39;: rid,
+            &#39;currency&#39;: currency.lower(),
+            &#39;amount&#39;: float(amount)
+        }
+        if chain_name:
+            data[&#39;chain_name&#39;] = chain_name
+        if memo:
+            data[&#39;memo&#39;] = memo
+        if tid:
+            data[&#39;tid&#39;] = tid
+
+        data = self._build_data(data)
+
+        r = requests.post(url, data=data, timeout=TIMEOUT)
+        result = r.json()
+
+        if result[&#39;code&#39;] != 0:
+            return None
+        else:
+            wo = WithdrawOrder(result)
+            return wo</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -925,6 +1037,86 @@ class UserOrder:
         ) for x in result[&#39;data&#39;]]</code></pre>
 </details>
 </dd>
+<dt id="oceanex_py3.personal.Personal.withdraw"><code class="name flex">
+<span>def <span class="ident">withdraw</span></span>(<span>self, rid: str, currency: str, amount: float, chain_name: str = None, memo: str = None, tid: str = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Withdraw assets.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>rid</code></strong> :&ensp;<code>str</code></dt>
+<dd>Destination address or beneficiary ID (case sensitive).</dd>
+<dt><strong><code>currency</code></strong> :&ensp;<code>str</code></dt>
+<dd>Currency ID. eg. "vet".</dd>
+<dt><strong><code>amount</code></strong> :&ensp;<code>float</code></dt>
+<dd>Amount to withdraw (take care of rounding yourself)</dd>
+<dt><strong><code>chain_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Chain name if applicable</dd>
+<dt><strong><code>memo</code></strong> :&ensp;<code>str</code></dt>
+<dd>Short string to describe withdraw</dd>
+<dt><strong><code>tid</code></strong> :&ensp;<code>str</code></dt>
+<dd>Shared transaction ID. Must &lt;= 64 chars. Leave blank, the exchange will generate one for you.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>order</code></dt>
+<dd>A <code><a title="oceanex_py3.personal.WithdrawOrder" href="#oceanex_py3.personal.WithdrawOrder">WithdrawOrder</a></code> or None if operation failed.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def withdraw(self, rid: str, currency: str, amount: float, chain_name: str = None, memo: str = None, tid: str = None):
+    &#39;&#39;&#39; Withdraw assets.
+
+    Parameters
+    ----------
+
+    rid: str
+        Destination address or beneficiary ID (case sensitive).
+    currency: str
+        Currency ID. eg. &#34;vet&#34;.
+    amount: float
+        Amount to withdraw (take care of rounding yourself)
+    chain_name: str
+        Chain name if applicable
+    memo: str
+        Short string to describe withdraw
+    tid: str
+        Shared transaction ID. Must &lt;= 64 chars. Leave blank, the exchange will generate one for you.
+
+    Returns
+    -------
+
+    order
+        A `WithdrawOrder` or None if operation failed.
+
+    &#39;&#39;&#39;
+    url = URL + &#39;/withdraws/special/new&#39;
+    data = {
+        &#39;rid&#39;: rid,
+        &#39;currency&#39;: currency.lower(),
+        &#39;amount&#39;: float(amount)
+    }
+    if chain_name:
+        data[&#39;chain_name&#39;] = chain_name
+    if memo:
+        data[&#39;memo&#39;] = memo
+    if tid:
+        data[&#39;tid&#39;] = tid
+
+    data = self._build_data(data)
+
+    r = requests.post(url, data=data, timeout=TIMEOUT)
+    result = r.json()
+
+    if result[&#39;code&#39;] != 0:
+        return None
+    else:
+        wo = WithdrawOrder(result)
+        return wo</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 <dt id="oceanex_py3.personal.UserOrder"><code class="flex name class">
@@ -1018,6 +1210,31 @@ class UserOrder:
         self.market = str(market)</code></pre>
 </details>
 </dd>
+<dt id="oceanex_py3.personal.WithdrawOrder"><code class="flex name class">
+<span>class <span class="ident">WithdrawOrder</span></span>
+<span>(</span><span>response)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class WithdrawOrder:
+    def __init__(self, response):
+        result = response[&#39;data&#39;]
+        self.currency = result[&#39;currency&#39;]
+        self.chain_name = result[&#39;chain_name&#39;]
+        self.amount = float(result[&#39;amount&#39;])
+        self.fee = float(result[&#39;fee&#39;])
+        self.blockchain_txid = result[&#39;blockchain_txid&#39;]
+        self.rid = result[&#39;rid&#39;]
+        self.memo = result[&#34;memo&#34;]
+        self.created_on = result.get(&#39;completed_on&#39;, 0) # timestamp
+        self.updated_on = result.get(&#39;completed_on&#39;, 0) # timestamp
+        self.completed_on = result.get(&#39;completed_on&#39;, 0) # timestamp</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 </article>
@@ -1046,10 +1263,14 @@ class UserOrder:
 <li><code><a title="oceanex_py3.personal.Personal.new_buy_limit_order" href="#oceanex_py3.personal.Personal.new_buy_limit_order">new_buy_limit_order</a></code></li>
 <li><code><a title="oceanex_py3.personal.Personal.new_sell_limit_order" href="#oceanex_py3.personal.Personal.new_sell_limit_order">new_sell_limit_order</a></code></li>
 <li><code><a title="oceanex_py3.personal.Personal.orders_status" href="#oceanex_py3.personal.Personal.orders_status">orders_status</a></code></li>
+<li><code><a title="oceanex_py3.personal.Personal.withdraw" href="#oceanex_py3.personal.Personal.withdraw">withdraw</a></code></li>
 </ul>
 </li>
 <li>
 <h4><code><a title="oceanex_py3.personal.UserOrder" href="#oceanex_py3.personal.UserOrder">UserOrder</a></code></h4>
+</li>
+<li>
+<h4><code><a title="oceanex_py3.personal.WithdrawOrder" href="#oceanex_py3.personal.WithdrawOrder">WithdrawOrder</a></code></h4>
 </li>
 </ul>
 </li>
