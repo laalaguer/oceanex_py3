@@ -94,7 +94,6 @@ class Personal:
                 result['data']['market']
             )
 
-
     def new_buy_limit_order(self, left, right, price, volume):
         ''' Create a buy limit order.
 
@@ -192,7 +191,6 @@ class Personal:
                 x['market']
             ) for x in result['data']]
 
-
     def cancel_orders(self, order_id_list):
         ''' Cancel multiple orders.
         
@@ -240,6 +238,71 @@ class Personal:
             return False
         else:
             return True
+
+    def withdraw(self, rid: str, currency: str, amount: float, chain_name: str = None, memo: str = None, tid: str = None):
+        ''' Withdraw assets.
+
+        Parameters
+        ----------
+
+        rid: str
+            Destination address or beneficiary ID (case sensitive).
+        currency: str
+            Currency ID. eg. "vet".
+        amount: float
+            Amount to withdraw (take care of rounding yourself)
+        chain_name: str
+            Chain name if applicable
+        memo: str
+            Short string to describe withdraw
+        tid: str
+            Shared transaction ID. Must <= 64 chars. Leave blank, the exchange will generate one for you.
+
+        Returns
+        -------
+
+        order
+            A `WithdrawOrder` or None if operation failed.
+
+        '''
+        url = URL + '/withdraws/special/new'
+        data = {
+            'rid': rid,
+            'currency': currency.lower(),
+            'amount': float(amount)
+        }
+        if chain_name:
+            data['chain_name'] = chain_name
+        if memo:
+            data['memo'] = memo
+        if tid:
+            data['tid'] = tid
+
+        data = self._build_data(data)
+
+        r = requests.post(url, data=data, timeout=TIMEOUT)
+        result = r.json()
+
+        if result['code'] != 0:
+            return None
+        else:
+            wo = WithdrawOrder(result)
+            return wo
+
+
+class WithdrawOrder:
+    def __init__(self, result):
+        self.currency = result['currency']
+        self.chain_name = result['chain_name']
+        self.amount = float(result['amount'])
+        self.fee = float(result['fee'])
+        self.blockchain_txid = result['blockchain_txid']
+        self.rid = result['rid']
+        self.memo = result["memo"]
+        self.created_on = int(result['created_on']) # timestamp
+        self.updated_on = int(result['updated_on']) # timestamp
+        self.completed_on = int(result['completed_on']) # timestamp
+
 
 class Account:
     ''' User wallets, balances.

@@ -46,3 +46,11 @@ def test_buy_status_cancel():
     assert p.cancel_orders([order1.identifier, order2.identifier]) == True
     # cancel all orders
     assert p.cancel_all_orders() == True
+
+def test_withdraw():
+    ''' Test withdraw VET to user's pocket,
+        You must have whitelisted below address in your ocean account
+    '''
+    receiver = '0x422D582C08d7965cD5Fefef1572faaA15783f473'
+    withdraw_order = p.withdraw(receiver, 'vet', 300, memo="Thanks to your work")
+    assert withdraw_order != None
