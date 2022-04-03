@@ -3,6 +3,7 @@ Personal API methods of Oceanex. Requires authentication.
 
 See https://api.oceanex.pro/doc/v1/
 '''
+from pprint import pprint
 import jwt
 import requests
 
@@ -284,6 +285,7 @@ class Personal:
         result = r.json()
 
         if result['code'] != 0:
+            pprint(result)
             return None
         else:
             wo = WithdrawOrder(result)
