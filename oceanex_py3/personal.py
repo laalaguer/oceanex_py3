@@ -291,6 +291,31 @@ class Personal:
             wo = WithdrawOrder(result)
             return wo
 
+    def get_deposit_addresses(self, currency: str):
+        '''
+        Get user's deposit addresses of a token. Eg. USDT can have ERC20, TRC20, BSC addresses.
+
+        Parameters
+        ----------
+        currency : str
+            the token symbol
+        '''
+
+        url = URL + '/deposit_addresses'
+        data = {
+            'currency': currency.lower()
+        }
+
+        data = self._build_data(data)
+
+        r = requests.post(url, data=data, timeout=TIMEOUT)
+        result = r.json()
+
+        if result['code'] != 0:
+            pprint(result)
+            return None
+        else:
+            return result
 
 class WithdrawOrder:
     def __init__(self, response):
