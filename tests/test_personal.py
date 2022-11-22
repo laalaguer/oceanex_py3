@@ -63,6 +63,4 @@ def test_get_deposit_addresses():
         assert len(addresses.resources) > 0
 
         for each in addresses.resources:
-            print(each.currency_id)
-            print(each.address)
-            print(each.deposit_status)
+            print(f'{each.currency_id}::chain::{each.chain_name}::address::{each.address}::can_deposit::{each.deposit_status}')
