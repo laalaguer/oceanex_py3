@@ -33,6 +33,7 @@ Personal API methods of Oceanex. Requires authentication.
 
 See https://api.oceanex.pro/doc/v1/
 &#39;&#39;&#39;
+from pprint import pprint
 import jwt
 import requests
 
@@ -314,10 +315,63 @@ class Personal:
         result = r.json()
 
         if result[&#39;code&#39;] != 0:
+            pprint(result)
             return None
         else:
             wo = WithdrawOrder(result)
             return wo
+
+    def get_deposit_addresses(self, currency: str):
+        &#39;&#39;&#39;
+        Get user&#39;s deposit addresses of a token. Eg. USDT can have ERC20, TRC20, BSC addresses.
+
+        Parameters
+        ----------
+        currency : str
+            the token symbol
+        &#39;&#39;&#39;
+
+        url = URL + &#39;/deposit_addresses&#39;
+        data = {
+            &#39;currency&#39;: currency.lower()
+        }
+
+        data = self._build_data(data)
+
+        r = requests.post(url, data=data, timeout=TIMEOUT)
+        result = r.json()
+
+        if result[&#39;code&#39;] != 0:
+            pprint(result)
+            return None
+        else:
+            return DepositAddresses(result)
+
+
+class SingleDepositAddress:
+    def __init__(self, resource):
+        self.chain_name = resource.get(&#39;chain_name&#39;, &#39;&#39;)
+        self.currency_id = resource.get(&#39;currency_id&#39;, &#39;&#39;)
+        self.address = resource.get(&#39;address&#39;, &#39;&#39;)
+        self.memo = resource.get(&#39;memo&#39;, &#39;&#39;)
+        self.deposit_status = False
+
+        if resource.get(&#39;deposit_status&#39;, &#39;disabled&#39;) == &#39;enabled&#39;:
+            self.deposit_status = True
+
+
+class DepositAddresses:
+    def __init__(self, response):
+        data = response[&#39;data&#39;][&#39;data&#39;]
+        
+        self.currency_id = data.get(&#39;currency_id&#39;, &#39;&#39;).lower()
+        self.display_name = data.get(&#39;display_name&#39;, &#39;&#39;)
+        self.resources = []
+
+        for resource in data[&#39;resources&#39;]:
+            self.resources.append(
+                SingleDepositAddress(resource)
+            )
 
 
 class WithdrawOrder:
@@ -461,6 +515,30 @@ class UserOrder:
         self.symbol = symbol.lower()
         self.balance = float(balance)
         self.locked_balance = float(locked_balance)</code></pre>
+</details>
+</dd>
+<dt id="oceanex_py3.personal.DepositAddresses"><code class="flex name class">
+<span>class <span class="ident">DepositAddresses</span></span>
+<span>(</span><span>response)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DepositAddresses:
+    def __init__(self, response):
+        data = response[&#39;data&#39;][&#39;data&#39;]
+        
+        self.currency_id = data.get(&#39;currency_id&#39;, &#39;&#39;).lower()
+        self.display_name = data.get(&#39;display_name&#39;, &#39;&#39;)
+        self.resources = []
+
+        for resource in data[&#39;resources&#39;]:
+            self.resources.append(
+                SingleDepositAddress(resource)
+            )</code></pre>
 </details>
 </dd>
 <dt id="oceanex_py3.personal.Personal"><code class="flex name class">
@@ -748,10 +826,37 @@ class UserOrder:
         result = r.json()
 
         if result[&#39;code&#39;] != 0:
+            pprint(result)
             return None
         else:
             wo = WithdrawOrder(result)
-            return wo</code></pre>
+            return wo
+
+    def get_deposit_addresses(self, currency: str):
+        &#39;&#39;&#39;
+        Get user&#39;s deposit addresses of a token. Eg. USDT can have ERC20, TRC20, BSC addresses.
+
+        Parameters
+        ----------
+        currency : str
+            the token symbol
+        &#39;&#39;&#39;
+
+        url = URL + &#39;/deposit_addresses&#39;
+        data = {
+            &#39;currency&#39;: currency.lower()
+        }
+
+        data = self._build_data(data)
+
+        r = requests.post(url, data=data, timeout=TIMEOUT)
+        result = r.json()
+
+        if result[&#39;code&#39;] != 0:
+            pprint(result)
+            return None
+        else:
+            return DepositAddresses(result)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -866,6 +971,47 @@ class UserOrder:
         return []
     else:
         return [ Account(x[&#39;currency&#39;], x[&#39;balance&#39;], x[&#39;locked&#39;]) for x in result[&#39;data&#39;][&#39;accounts&#39;] ]</code></pre>
+</details>
+</dd>
+<dt id="oceanex_py3.personal.Personal.get_deposit_addresses"><code class="name flex">
+<span>def <span class="ident">get_deposit_addresses</span></span>(<span>self, currency: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get user's deposit addresses of a token. Eg. USDT can have ERC20, TRC20, BSC addresses.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>currency</code></strong> :&ensp;<code>str</code></dt>
+<dd>the token symbol</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_deposit_addresses(self, currency: str):
+    &#39;&#39;&#39;
+    Get user&#39;s deposit addresses of a token. Eg. USDT can have ERC20, TRC20, BSC addresses.
+
+    Parameters
+    ----------
+    currency : str
+        the token symbol
+    &#39;&#39;&#39;
+
+    url = URL + &#39;/deposit_addresses&#39;
+    data = {
+        &#39;currency&#39;: currency.lower()
+    }
+
+    data = self._build_data(data)
+
+    r = requests.post(url, data=data, timeout=TIMEOUT)
+    result = r.json()
+
+    if result[&#39;code&#39;] != 0:
+        pprint(result)
+        return None
+    else:
+        return DepositAddresses(result)</code></pre>
 </details>
 </dd>
 <dt id="oceanex_py3.personal.Personal.new_buy_limit_order"><code class="name flex">
@@ -1111,6 +1257,7 @@ class UserOrder:
     result = r.json()
 
     if result[&#39;code&#39;] != 0:
+        pprint(result)
         return None
     else:
         wo = WithdrawOrder(result)
@@ -1118,6 +1265,28 @@ class UserOrder:
 </details>
 </dd>
 </dl>
+</dd>
+<dt id="oceanex_py3.personal.SingleDepositAddress"><code class="flex name class">
+<span>class <span class="ident">SingleDepositAddress</span></span>
+<span>(</span><span>resource)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SingleDepositAddress:
+    def __init__(self, resource):
+        self.chain_name = resource.get(&#39;chain_name&#39;, &#39;&#39;)
+        self.currency_id = resource.get(&#39;currency_id&#39;, &#39;&#39;)
+        self.address = resource.get(&#39;address&#39;, &#39;&#39;)
+        self.memo = resource.get(&#39;memo&#39;, &#39;&#39;)
+        self.deposit_status = False
+
+        if resource.get(&#39;deposit_status&#39;, &#39;disabled&#39;) == &#39;enabled&#39;:
+            self.deposit_status = True</code></pre>
+</details>
 </dd>
 <dt id="oceanex_py3.personal.UserOrder"><code class="flex name class">
 <span>class <span class="ident">UserOrder</span></span>
@@ -1255,16 +1424,23 @@ class UserOrder:
 <h4><code><a title="oceanex_py3.personal.Account" href="#oceanex_py3.personal.Account">Account</a></code></h4>
 </li>
 <li>
+<h4><code><a title="oceanex_py3.personal.DepositAddresses" href="#oceanex_py3.personal.DepositAddresses">DepositAddresses</a></code></h4>
+</li>
+<li>
 <h4><code><a title="oceanex_py3.personal.Personal" href="#oceanex_py3.personal.Personal">Personal</a></code></h4>
 <ul class="">
 <li><code><a title="oceanex_py3.personal.Personal.cancel_all_orders" href="#oceanex_py3.personal.Personal.cancel_all_orders">cancel_all_orders</a></code></li>
 <li><code><a title="oceanex_py3.personal.Personal.cancel_orders" href="#oceanex_py3.personal.Personal.cancel_orders">cancel_orders</a></code></li>
 <li><code><a title="oceanex_py3.personal.Personal.get_accounts" href="#oceanex_py3.personal.Personal.get_accounts">get_accounts</a></code></li>
+<li><code><a title="oceanex_py3.personal.Personal.get_deposit_addresses" href="#oceanex_py3.personal.Personal.get_deposit_addresses">get_deposit_addresses</a></code></li>
 <li><code><a title="oceanex_py3.personal.Personal.new_buy_limit_order" href="#oceanex_py3.personal.Personal.new_buy_limit_order">new_buy_limit_order</a></code></li>
 <li><code><a title="oceanex_py3.personal.Personal.new_sell_limit_order" href="#oceanex_py3.personal.Personal.new_sell_limit_order">new_sell_limit_order</a></code></li>
 <li><code><a title="oceanex_py3.personal.Personal.orders_status" href="#oceanex_py3.personal.Personal.orders_status">orders_status</a></code></li>
 <li><code><a title="oceanex_py3.personal.Personal.withdraw" href="#oceanex_py3.personal.Personal.withdraw">withdraw</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="oceanex_py3.personal.SingleDepositAddress" href="#oceanex_py3.personal.SingleDepositAddress">SingleDepositAddress</a></code></h4>
 </li>
 <li>
 <h4><code><a title="oceanex_py3.personal.UserOrder" href="#oceanex_py3.personal.UserOrder">UserOrder</a></code></h4>

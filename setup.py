@@ -26,7 +26,7 @@ assert long_description
 
 setup(
     name='oceanex_py3',
-    version='1.2.1',
+    version='1.2.2',
     url='https://github.com/laalaguer/oceanex_py3',
     license='MIT',
     author='laalaguer',
