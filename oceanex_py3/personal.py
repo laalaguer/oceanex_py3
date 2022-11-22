@@ -315,7 +315,34 @@ class Personal:
             pprint(result)
             return None
         else:
-            return result
+            return DepositAddresses(result)
+
+
+class SingleDepositAddress:
+    def __init__(self, resource):
+        self.chain_name = resource.get('chain_name', '')
+        self.currency_id = resource.get('currency_id', '')
+        self.address = resource.get('address', '')
+        self.memo = resource.get('memo', '')
+        self.deposit_status = False
+
+        if resource.get('deposit_status', 'disabled') == 'enabled':
+            self.deposit_status = True
+
+
+class DepositAddresses:
+    def __init__(self, response):
+        data = response['data']['data']
+        
+        self.currency_id = data.get('currency_id', '').lower()
+        self.display_name = data.get('display_name', '')
+        self.resources = []
+
+        for resource in data['resources']:
+            self.resources.append(
+                SingleDepositAddress(resource)
+            )
+
 
 class WithdrawOrder:
     def __init__(self, response):

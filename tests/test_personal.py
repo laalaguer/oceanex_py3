@@ -57,5 +57,12 @@ def test_accounts():
 
 def test_get_deposit_addresses():
     ''' Test deposit addresses for USDT and VET '''
-    print(p.get_deposit_addresses('VET'))
-    print(p.get_deposit_addresses('USDT'))
+
+    for x in ['BTC', 'VET', 'USDT']:
+        addresses = p.get_deposit_addresses(x)
+        assert len(addresses.resources) > 0
+
+        for each in addresses.resources:
+            print(each.currency_id)
+            print(each.address)
+            print(each.deposit_status)

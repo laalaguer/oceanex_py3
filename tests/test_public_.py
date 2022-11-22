@@ -24,16 +24,16 @@ def test_trade():
     trades = public.get_trades('btcusdt', 20)
     assert len(trades) == 20
 
-    # Get the nearest 500 lines of JUR trades.
+    # Get the nearest 500 lines of VET/VEUSD trades.
     all_trades = []
-    trades = public.get_trades('jurvet', 20)
+    trades = public.get_trades('vetveusd', 20)
     assert len(trades) == 20
     for trade in trades:
         all_trades.append(trade)
 
     next_id = trades[-1].identifier
     while True:
-        trades = public.get_trades('jurvet', 500, to_id=next_id)
+        trades = public.get_trades('vetveusd', 500, to_id=next_id)
         for trade in trades:
             all_trades.append(trade)
         if len(trades) == 500:
